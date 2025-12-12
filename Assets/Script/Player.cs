@@ -1,9 +1,12 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public GameObject[] effects;
+    private Animator animator;
+    private AudioSource audioSource;
 
     [Header("Button's images")]
     public Image StrongAttack_1_img;
@@ -13,20 +16,31 @@ public class Player : MonoBehaviour
     private float StrongAttack_1_time;
     private float StrongAttack_2_time;
     private float StrongAttack_3_time;
+
     [Header("Movement")]
-    private Animator animator;
     public float speed;
     public FixedJoystick myJoyStick;
+
+    [Header("Health")]
+    public float health = 100;
+    public Image healthBar;
     [Header("Camera")]
     private bool cameraMove = true;
     public GameObject cameraObject;
     public Vector3 plusVec;
     public float speedCamera;
     private float waitAnimation;
+    [Header("Audio Clips")]
+    public AudioClip soundAttack_1;
+    public AudioClip soundAttack_2;
+    public AudioClip soundAttack_3; 
+    public AudioClip energySound;
+    public AudioClip[] hits;
 
     void Start()
     {
-        animator = GetComponent<Animator>(); 
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();  
     }
 
     void FixedUpdate()
@@ -42,7 +56,7 @@ public class Player : MonoBehaviour
             cameraObject.transform.LookAt(transform.position);
         }
 
-        if(waitAnimation <= 0)
+        if(waitAnimation <= 0 && health > 0)
         {
             if(myJoyStick.Horizontal != 0 || myJoyStick.Vertical != 0)
             {
@@ -52,6 +66,18 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
+        healthBar.fillAmount = health / 100;
+
+        if(health >= 100)
+        {
+            health = 100;
+        }
+        else if(health <= 0)
+        {
+            health = 0;
+            animator.Play("die");
+        }
+
         if(StrongAttack_1_time > 0)
         {
             StrongAttack_1_img.enabled = true;
@@ -132,7 +158,7 @@ public class Player : MonoBehaviour
 
     public void Attack()
     {
-        if(waitAnimation <= 0)
+        if(waitAnimation <= 0 && health > 0)
         {
             animator.Play("attack");
             waitAnimation = 1.2f;
@@ -140,7 +166,7 @@ public class Player : MonoBehaviour
     }
     public void StrongAttack_1()
     {
-        if(waitAnimation <= 0)
+        if (waitAnimation <= 0 && health > 0)
         {
             animator.Play("great-attack-1");
             waitAnimation = 5f;
@@ -149,7 +175,7 @@ public class Player : MonoBehaviour
     }
     public void StrongAttack_2()
     {
-        if(waitAnimation <= 0)
+        if (waitAnimation <= 0 && health > 0)
         {
             animator.Play("great-attack-2");
             waitAnimation = 2f;
@@ -158,7 +184,7 @@ public class Player : MonoBehaviour
     }
     public void StrongAttack_3()
     {
-        if(waitAnimation <= 0)
+        if (waitAnimation <= 0 && health > 0)
         {
             animator.Play("great-attack-3");
             waitAnimation = 2f;
@@ -170,21 +196,26 @@ public class Player : MonoBehaviour
     {
         Instantiate(effects[3], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
         Instantiate(effects[4], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        audioSource.PlayOneShot(soundAttack_2);
     }
     public void Event_Charge()
     {
         Instantiate(effects[0], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        audioSource.PlayOneShot(energySound);
     }
     public void Event_StrongAttack_1()
     {
         Instantiate(effects[1], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        audioSource.PlayOneShot(soundAttack_1);
     }
     public void Event_StrongAttack_2()
     {
         Instantiate(effects[2], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        audioSource.PlayOneShot(soundAttack_3);
     }
     public void Event_StrongAttack_3()
     {
         Instantiate(effects[5], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        audioSource.PlayOneShot(soundAttack_2);
     }
 }
