@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public GameObject[] effects;
-    private Animator animator;
-    private AudioSource audioSource;
+    [HideInInspector] public Animator animator;
+    [HideInInspector] public AudioSource audioSource;
 
     [Header("Button's images")]
     public Image StrongAttack_1_img;
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public GameObject cameraObject;
     public Vector3 plusVec;
     public float speedCamera;
-    private float waitAnimation;
+    [HideInInspector]public float waitAnimation;
     [Header("Audio Clips")]
     public AudioClip soundAttack_1;
     public AudioClip soundAttack_2;
@@ -194,28 +194,28 @@ public class Player : MonoBehaviour
     
     public void Event_Attack()
     {
-        Instantiate(effects[3], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
-        Instantiate(effects[4], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        Instantiate(effects[3], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
+        Instantiate(effects[4], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
     }
     public void Event_Charge()
     {
-        Instantiate(effects[0], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        Instantiate(effects[0], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(energySound);
     }
     public void Event_StrongAttack_1()
     {
-        Instantiate(effects[1], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        Instantiate(effects[1], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_1);
     }
     public void Event_StrongAttack_2()
     {
-        Instantiate(effects[2], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        Instantiate(effects[2], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_3);
     }
     public void Event_StrongAttack_3()
     {
-        Instantiate(effects[5], new Vector3(transform.position.x, 1.1f, transform.position.z), Quaternion.identity);
+        Instantiate(effects[5], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
     }
 }
