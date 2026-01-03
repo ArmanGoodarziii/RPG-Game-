@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public Transform attackPosition;
+    public float attackRange;
+    public LayerMask enemyLayer;
     public GameObject[] effects;
     [HideInInspector] public Animator animator;
     [HideInInspector] public AudioSource audioSource;
@@ -197,6 +200,7 @@ public class Player : MonoBehaviour
         Instantiate(effects[3], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         Instantiate(effects[4], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
+        damageAttack(0 , 10);
     }
     public void Event_Charge()
     {
@@ -207,15 +211,36 @@ public class Player : MonoBehaviour
     {
         Instantiate(effects[1], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_1);
+        damageAttack(10 , 20);
     }
     public void Event_StrongAttack_2()
     {
         Instantiate(effects[2], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_3);
+        damageAttack(3 , 40);
     }
     public void Event_StrongAttack_3()
     {
         Instantiate(effects[5], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
+    }
+
+    public void damageAttack(float range , float damage)
+    {
+        Collider[] collider = Physics.OverlapSphere(attackPosition.position, attackRange + range, enemyLayer);
+
+        if(collider != null)
+        {
+            for(int i = 0; i < collider.Length; i++)
+            {
+                if(collider[i].GetComponent<Enemy>().health > 0)
+                {
+                    audioSource.PlayOneShot(hits[Random.Range(0 , hits.Length)]);
+                    collider[i].GetComponent<Enemy>().animator.Play("hit");
+                    collider[i].GetComponent<Enemy>().health -= damage;
+                    collider[i].GetComponent<Enemy>().time_animation = 1f;
+                }
+            }
+        }
     }
 }

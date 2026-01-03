@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public float health = 50;
     public Transform attackPosition;
     public float attackRange;
     public LayerMask playerLayer;
@@ -10,15 +11,17 @@ public class Enemy : MonoBehaviour
     public GameObject[] weapones;
     public GameObject[] hats;
     private GameObject playerObject;
-    private Animator animator;
+    [HideInInspector] public Animator animator;
 
     [Header("Movement")]
     public float speed;
 
-    private float time_animation;
+    [HideInInspector] public float time_animation;
 
     void Start()
     {
+        health = Random.Range(50 , 100);
+
         skins[Random.Range(0 , skins.Length)].SetActive(true);
         weapones[Random.Range(0 , weapones.Length)].SetActive(true);
         hats[Random.Range(0 , hats.Length)].SetActive(true);
@@ -30,7 +33,14 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(time_animation <= 0)
+        if(health <= 0)
+        {
+            GetComponent<CapsuleCollider>().enabled = false;
+            GetComponent<Rigidbody>().isKinematic = true;
+            animator.Play("die");
+            Destroy(gameObject , 5);
+        }
+        if(time_animation <= 0 && health > 0)
         {
             Vector3 playerVec = new Vector3(playerObject.transform.position.x , playerObject.transform.position.y , playerObject.transform.position.z);
             transform.LookAt(playerVec);
