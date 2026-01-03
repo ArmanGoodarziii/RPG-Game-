@@ -200,7 +200,7 @@ public class Player : MonoBehaviour
         Instantiate(effects[3], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         Instantiate(effects[4], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
-        damageAttack(0 , 10);
+        damageAttack(2 , 10);
     }
     public void Event_Charge()
     {
@@ -211,18 +211,19 @@ public class Player : MonoBehaviour
     {
         Instantiate(effects[1], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_1);
-        damageAttack(10 , 20);
+        damageAttack(3 , 30);
     }
     public void Event_StrongAttack_2()
     {
         Instantiate(effects[2], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_3);
-        damageAttack(3 , 40);
+        damageAttack(3 , 15);
     }
     public void Event_StrongAttack_3()
     {
         Instantiate(effects[5], new Vector3(transform.position.x, 1.1f, transform.position.z), transform.rotation);
         audioSource.PlayOneShot(soundAttack_2);
+        damageAttack(5 , 20);
     }
 
     public void damageAttack(float range , float damage)

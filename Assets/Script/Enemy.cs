@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    public GameObject[] canvasImages;
     public float health = 50;
+    public float saveHealth;
+    public Image healthBar;
     public Transform attackPosition;
     public float attackRange;
     public LayerMask playerLayer;
@@ -21,6 +25,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         health = Random.Range(50 , 100);
+        saveHealth = health;
 
         skins[Random.Range(0 , skins.Length)].SetActive(true);
         weapones[Random.Range(0 , weapones.Length)].SetActive(true);
@@ -33,12 +38,34 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        healthBar.fillAmount = health / saveHealth;
+
+        if(health <= 30)
+        {
+            healthBar.color = Color.red;
+        }
+        else
+        {
+            healthBar.color = Color.green;  
+        }
         if(health <= 0)
         {
+            for(int i = 0 ; i < canvasImages.Length ; i++)
+            {
+                canvasImages[i].SetActive(false);
+            }
+
             GetComponent<CapsuleCollider>().enabled = false;
             GetComponent<Rigidbody>().isKinematic = true;
             animator.Play("die");
             Destroy(gameObject , 5);
+        }
+        else
+        {
+            for(int i = 0 ; i < canvasImages.Length ; i++)
+            {
+                canvasImages[i].transform.LookAt(playerObject.GetComponent<Player>().cameraObject.transform.position);
+            }
         }
         if(time_animation <= 0 && health > 0)
         {
